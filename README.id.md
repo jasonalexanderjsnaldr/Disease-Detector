@@ -1,3 +1,5 @@
+🇬🇧 [Read in English](README.en.md)
+
 # 🩺 Disease Detector
 
 Aplikasi web berbasis Machine Learning yang memprediksi kemungkinan penyakit berdasarkan gejala yang dipilih pengguna, lengkap dengan rekomendasi dokter spesialis, deskripsi penyakit, dan saran pencegahan — seluruhnya dalam Bahasa Indonesia.
@@ -89,9 +91,13 @@ Project ini dibangun dengan keputusan metodologi yang disengaja: **model Machine
 2. **Exploratory Data Analysis** — analisis distribusi kelas penyakit dan pengecekan keseimbangan data
 3. **Train-Test Split** — pembagian data dengan `stratify`, serta penanganan kelas dengan jumlah sampel terlalu sedikit
 4. **Model Comparison** — melatih dan membandingkan 4 algoritma klasifikasi
-5. **Evaluation** — classification report, feature importance, dan 5-fold cross-validation
+5. **Evaluation** — classification report, feature importance, dan 5-fold stratified cross-validation
 6. **Model Selection** — dipilih berdasarkan **F1-macro score**, bukan hanya accuracy, karena distribusi kelas penyakit dalam dataset tidak seimbang
 7. **Post-processing** — perhitungan confidence score saat inferensi untuk mendeteksi prediksi yang kurang bisa diandalkan
+
+### Catatan soal Skor Evaluasi
+
+Model mencapai F1-macro sempurna (1.0) baik pada data test maupun pada seluruh fold cross-validation (rata-rata 1.0 ± 0.0 di 5 fold). Angka ini **diinvestigasi lebih lanjut**, bukan langsung diterima sebagai indikator model yang sempurna — hasil cross-validation yang konsisten sempurna di 5 kombinasi split yang berbeda menutup kemungkinan *data leakage*. Kesimpulannya, skor ini disebabkan oleh karakteristik dataset yang memiliki kombinasi gejala unik dan tidak tumpang tindih antar kelas penyakit setelah proses deduplikasi, bukan indikasi generalisasi sempurna terhadap kasus dunia nyata yang jauh lebih kompleks dan bernoise. Temuan ini didokumentasikan sebagai bagian dari proses evaluasi kritis terhadap hasil model, bukan disembunyikan.
 
 ---
 
@@ -99,7 +105,7 @@ Project ini dibangun dengan keputusan metodologi yang disengaja: **model Machine
 
 - Model hanya mencakup **41 jenis penyakit** dan **131 gejala** sesuai dataset yang digunakan — penyakit di luar cakupan ini (misalnya COVID-19, batu ginjal, kanker) tidak dapat diprediksi
 - Beberapa gejala bersifat sangat umum dan dipakai di banyak penyakit sekaligus (misal mual, muntah, lelah), sehingga kombinasi gejala minim dapat menghasilkan prediksi dengan tingkat kepercayaan rendah — inilah alasan fitur validasi minimal gejala dan peringatan confidence ditambahkan
-- Dataset bersifat edukasi/tidak sepenuhnya merepresentasikan data klinis dunia nyata dalam skala besar
+- Dataset bersifat edukasi dan memiliki kombinasi gejala yang sangat terpisah antar kelas (lihat catatan skor evaluasi di atas), sehingga tidak sepenuhnya merepresentasikan kompleksitas data klinis dunia nyata dalam skala besar
 
 ---
 
@@ -108,6 +114,7 @@ Project ini dibangun dengan keputusan metodologi yang disengaja: **model Machine
 Beberapa tantangan nyata yang dihadapi selama pengembangan, dan bagaimana diselesaikan:
 
 - **Struktur dataset tidak konsisten** — dua file yang namanya mengindikasikan fungsi berbeda (`Doctor_Specialist.csv` dan `Doctor_Versus_Disease.csv`) ternyata isinya tertukar dari dugaan awal; salah satunya bahkan tidak memiliki header row. Diselesaikan dengan validasi isi file secara langsung sebelum diasumsikan, bukan hanya mengandalkan nama file.
+- **Skor evaluasi sempurna yang mencurigakan** — F1-macro 1.0 pada awalnya terlihat seperti model yang sangat baik, namun diinvestigasi lebih lanjut lewat cross-validation untuk memastikan bukan hasil dari data leakage, sebelum disimpulkan sebagai karakteristik dataset itu sendiri.
 - **Kendala deployment di berbagai platform gratis** — sempat mencoba Render, PythonAnywhere, Fly.io, Hugging Face Spaces, dan Replit, masing-masing dengan batasan berbeda (kuota disk, kebutuhan kartu kredit, server yang tidak selalu aktif). Akhirnya dipilih PythonAnywhere karena tidak memerlukan kartu kredit dan mendukung server yang aktif 24/7.
 - **Inkonsistensi versi library antar environment** — perbedaan versi `scikit-learn` antara environment training dan environment deployment sempat menyebabkan model gagal dimuat (`incompatible dtype`). Diselesaikan dengan menyamakan versi secara eksplisit di kedua sisi.
 - **Menerjemahkan konten medis teknis** — menerjemahkan 131 nama gejala dan 41 deskripsi penyakit ke Bahasa Indonesia yang natural, sambil tetap mempertahankan akurasi istilah medis.
@@ -156,6 +163,7 @@ Buka `http://127.0.0.1:8080` di browser.
 
 ## 🔭 Pengembangan Selanjutnya
 
+- [ ] Menguji model dengan dataset yang lebih kompleks/bernoise untuk mengukur kemampuan generalisasi yang lebih realistis
 - [ ] Menambahkan penyimpanan riwayat prediksi pengguna untuk analisis lanjutan
 - [ ] Memperluas cakupan dataset (jumlah penyakit & gejala) untuk representasi yang lebih luas
 - [ ] Otomasi deployment dengan CI/CD (GitHub Actions) agar update kode langsung ter-deploy tanpa langkah manual
