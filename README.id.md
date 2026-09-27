@@ -175,7 +175,7 @@ Buka `http://127.0.0.1:8080` di browser.
 ## 👤 Author
 
 **Jason Alexander**
-[GitHub](https://github.com/jasonalexander-png)
+[GitHub](https://github.com/jasonalexanderjsnaldr)
 
 ---
 
