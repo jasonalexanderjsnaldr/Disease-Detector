@@ -1,3 +1,5 @@
+🇮🇩 [Baca dalam Bahasa Indonesia](README.id.md)
+
 # 🩺 Disease Detector
 
 A Machine Learning-powered web application that predicts possible diseases based on user-selected symptoms, complete with medical specialist recommendations, disease descriptions, and prevention tips — with a fully localized Indonesian interface.
@@ -88,9 +90,13 @@ The project follows a deliberate methodological decision: **the Machine Learning
 2. **Exploratory Data Analysis** — analyzing disease class distribution and checking for class imbalance
 3. **Train-Test Split** — stratified splitting, along with handling of classes with too few samples
 4. **Model Comparison** — training and comparing 4 classification algorithms
-5. **Evaluation** — classification report, feature importance analysis, and 5-fold cross-validation
+5. **Evaluation** — classification report, feature importance analysis, and 5-fold stratified cross-validation
 6. **Model Selection** — chosen based on **F1-macro score** rather than accuracy alone, due to class imbalance in the disease distribution
 7. **Post-processing** — confidence score computation at inference time to flag unreliable predictions
+
+### A Note on Evaluation Scores
+
+The model achieved a perfect F1-macro score (1.0) on both the test set and across all cross-validation folds (mean 1.0 ± 0.0 over 5 folds). This result was **further investigated** rather than accepted at face value — the perfectly consistent score across 5 different random split combinations effectively rules out data leakage as the cause. The conclusion is that this score stems from the dataset's characteristic of having unique, non-overlapping symptom combinations per disease class after deduplication, rather than indicating perfect generalization to real-world cases, which are far more complex and noisy. This finding is documented as part of a critical evaluation process, not omitted.
 
 ---
 
@@ -98,7 +104,7 @@ The project follows a deliberate methodological decision: **the Machine Learning
 
 - The model only covers **41 disease types** and **131 symptoms** based on the dataset used — diseases outside this scope (e.g., COVID-19, kidney stones, cancer) cannot be predicted
 - Some symptoms are highly generic and shared across many diseases (e.g., nausea, vomiting, fatigue), meaning a minimal symptom combination can result in low-confidence predictions — this is why the minimum symptom requirement and confidence warning features were added
-- The dataset is educational in nature and does not fully represent large-scale, real-world clinical data
+- The dataset is educational in nature and has highly separable symptom combinations between classes (see the evaluation score note above), and therefore does not fully represent the complexity of large-scale, real-world clinical data
 
 ---
 
@@ -107,6 +113,7 @@ The project follows a deliberate methodological decision: **the Machine Learning
 Real challenges encountered during development, and how they were resolved:
 
 - **Inconsistent dataset structure** — two files whose names implied different purposes (`Doctor_Specialist.csv` and `Doctor_Versus_Disease.csv`) turned out to have swapped roles from initial assumptions; one of them didn't even have a header row. Resolved by validating actual file contents rather than relying on filenames alone.
+- **Suspiciously perfect evaluation scores** — an F1-macro of 1.0 initially looked like an excellent model, but was further investigated through cross-validation to rule out data leakage before concluding it was a characteristic of the dataset itself.
 - **Deployment challenges across free-tier platforms** — Render, PythonAnywhere, Fly.io, Hugging Face Spaces, and Replit were all evaluated, each with different constraints (disk quotas, credit card requirements, servers that sleep when idle). PythonAnywhere was ultimately chosen for requiring no credit card while still providing a 24/7 always-on server.
 - **Library version inconsistency across environments** — a scikit-learn version mismatch between the training and deployment environments caused model loading to fail (`incompatible dtype`). Resolved by explicitly pinning matching versions on both sides.
 - **Translating technical medical content** — translated 131 symptom names and 41 disease descriptions into natural Bahasa Indonesia while preserving medical accuracy.
@@ -155,6 +162,7 @@ Open `http://127.0.0.1:8080` in your browser.
 
 ## 🔭 Future Improvements
 
+- [ ] Test the model against a more complex/noisy dataset to measure more realistic generalization performance
 - [ ] Store user prediction history for further analysis
 - [ ] Expand dataset coverage (more diseases & symptoms) for broader representation
 - [ ] Automate deployment with CI/CD (GitHub Actions) for zero-touch updates on every push
@@ -166,7 +174,7 @@ Open `http://127.0.0.1:8080` in your browser.
 ## 👤 Author
 
 **Jason Alexander**
-[GitHub](https://github.com/jasonalexander-png)
+[GitHub](https://github.com/jasonalexanderjsnaldr)
 
 ---
 
